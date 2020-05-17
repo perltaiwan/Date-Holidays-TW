@@ -13,8 +13,8 @@ use DateTime::Calendar::Chinese;
 my %NATIONAL = (
     '0101' => '中華民國開國紀念日',
     '0228' => '和平紀念日',
-    '1010' => '國慶日',
     '0404' => '兒童節',
+    '1010' => '國慶日',
 );
 
 my %FOLK_LUNAR = (
@@ -24,25 +24,30 @@ my %FOLK_LUNAR = (
     '0505' => '端午節',
     '0815' => '中秋節',
     '1230' => '農曆除夕',
+    # '????' => '清明節' (民族掃墓節)
 );
 
-my %IS_QINGMING = map { $_ => '民族掃墓節' } (
-    '2020.0404',
-    '2021.0405',
-    '2022.0405',
-    '2023.0405',
-    '2024.0404',
-);
-
-my %IS_COMPENSATED = (
-    '2020.0123' => '農曆除夕',
-    '2020.0128' => '春節',
-    '2020.0129' => '春節',
-    '2020.0402' => '兒童節',
-    '2020.0403' => '兒童節',
-    '2020.0626' => '端午節',
-    '2020.1002' => '中秋節',
-    '2020.1009' => '國慶日',
+my %CAL = (
+    2020 => {
+        "0101" => "中華民國開國紀念日",
+        "0123" => "農曆除夕",
+        "0124" => "農曆除夕",
+        "0125" => "春節",
+        "0126" => "春節",
+        "0127" => "春節",
+        "0128" => "春節",
+        "0129" => "春節",
+        "0228" => "和平紀念日",
+        "0402" => "兒童節",
+        "0403" => "兒童節",
+        "0404" => "兒童節",
+        "0625" => "端午節",
+        "0626" => "端午節",
+        "1001" => "中秋節",
+        "1002" => "中秋節",
+        "1009" => "國慶日",
+        "1010" => "國慶日"
+    }
 );
 
 sub new { bless {}, shift };
@@ -67,9 +72,9 @@ sub tw_holidays {
 
         my $dt = DateTime->new( year => $year, month => 1, day => 1, time_zone => 'Asia/Taipei' );
         while ($dt->year == $year) {
-            my $mmdd = $dt->strftime('%m%d');
-            my $h = $NATIONAL{$mmdd} // $IS_QINGMING{"${year}.${mmdd}"} // $IS_COMPENSATED{"${year}.${mmdd}"} // __is_tw_lunar_holiday($dt);
+            my $h = __is_tw_holiday($dt);
             if (defined($h)) {
+                my $mmdd = $dt->strftime('%m%d');
                 $holidays{$mmdd} = $h;
             }
 
@@ -77,22 +82,28 @@ sub tw_holidays {
         }
 
         $_reified{$year} = \%holidays;
-    };
+    }
 
     return $_reified{$year};
 }
 
 sub is_tw_holiday {
     my ($year, $month, $day) = @_;
-    my $mmdd = sprintf('%02d%02d', $month, $day);
-    return $NATIONAL{$mmdd} // $IS_QINGMING{"${year}.${mmdd}"} // $IS_COMPENSATED{"${year}.${mmdd}"} // __is_tw_lunar_holiday(
+    return __is_tw_holiday(
         DateTime->new(
-            year      => $year,
-            month     => $month,
-            day       => $day,
+            year => $year,
+            month => $month,
+            day => $day,
             time_zone => 'Asia/Taipei',
         )
-    ) ? 1 : 0;
+    );
+}
+
+sub __is_tw_holiday {
+    my ($dt) = @_;
+    my $mmdd = $dt->strftime('%m%d');
+    my $year = $dt->year;
+    return $CAL{$year}{$mmdd} // $NATIONAL{$mmdd} // __is_qingming($dt) // __is_tw_lunar_holiday($dt)
 }
 
 sub __is_tw_lunar_holiday {
@@ -100,8 +111,18 @@ sub __is_tw_lunar_holiday {
     my $lunar_date = DateTime::Calendar::Chinese->from_object(object => $dt);
     return undef if $lunar_date->leap_month;
     my $lunar_mmdd = sprintf('%02d%02d', $lunar_date->month, $lunar_date->day);
-    return undef if $lunar_date->leap_month;
     return $FOLK_LUNAR{$lunar_mmdd};
+}
+
+sub __is_qingming {
+    my $dt = $_[0];
+    return undef unless $dt->month == 4 && 3 < $dt->day && $dt->day < 6;
+    my $year = $dt->year;
+    die "Unsupported" if $year < 1901 || 2100 < $year;
+    my $Y = ($year % 100);
+    my $C = (1901 <= $year && $year < 2001) ? 5.59 : 4.81;
+    my $n = int($Y * 0.2422 + 4.81) - int($Y / 4);
+    return $dt->day == $n ? 1 : undef;
 }
 
 1;
