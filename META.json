@@ -1,7 +1,8 @@
 {
    "abstract" : "Determine whether it is Taiwan Holidays or not.",
    "author" : [
-      "Kang-min Liu C<< <gugod@gugod.org> >>"
+      "Kang-min Liu C<< <gugod@gugod.org> >>",
+      "Wei-Hon Chen"
    ],
    "dynamic_config" : 0,
    "generated_by" : "App::ModuleBuildTiny version 0.027",

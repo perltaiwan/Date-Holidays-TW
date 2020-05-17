@@ -2,6 +2,7 @@
 abstract: 'Determine whether it is Taiwan Holidays or not.'
 author:
   - 'Kang-min Liu C<< <gugod@gugod.org> >>'
+  - 'Wei-Hon Chen'
 build_requires: {}
 configure_requires:
   Module::Build::Tiny: '0.034'

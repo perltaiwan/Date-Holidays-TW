@@ -131,6 +131,7 @@ sub __is_tw_lunar_holiday {
 }
 
 sub __is_qingming {
+    # Thanks Wei-Hon Chen for the formula.
     my $dt = $_[0];
     return undef unless $dt->month == 4 && 3 < $dt->day && $dt->day < 6;
     my $year = $dt->year;
@@ -234,13 +235,11 @@ This does the same thing as function C<tw_holidays>.
 
 L<Date::Holidays>, L<https://www.dgpa.gov.tw/informationlist?uid=30>
 
-=head1 COPYRIGHT
-
 =head1 AUTHOR
 
 Kang-min Liu C<< <gugod@gugod.org> >>
 
-Wei-Hon Chen, for the formula of C<__is_qingming> function.
+Wei-Hon Chen
 
 =head1 LICENSE
 

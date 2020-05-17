@@ -20,25 +20,27 @@ SYNOPSIS
 
 DESCRIPTION
 
-    This module provides functions look lookup into Taiwan holiday
-    calendars for known holidays. This module could be used by itself, or
-    under via Date::Holidays module.
+    This module provides functions to look into Taiwan holiday calendars
+    for known holidays. It could be used by itself, or under via
+    Date::Holidays module.
 
     Caveat: Due to the rule of weekend-compensation and the fact that the
     majority of holidays are defined by Chinese calendar (Lunar), it
     requires some non-trivial amount of computation to correctly determine
-    whether the given date is an holiday or not. Sometimes the result of
-    such computation mismatchs the official announcement (evidently some
-    hidden human-factor are involved.)
+    whether the given date is an holiday or not -- which is not implemented
+    at this version.
 
-    The current implementation includes all known holidays for year 2020 in
-    a lookup table and should therefore correctly determine holidays in the
-    year 2020. However, it does not contain the required computation for
-    weekend-compensation. Conventionally the holiday calendar for the next
-    year is announcend at the end of June and we could start to mix the new
-    information into the lookup table in this module.
+    The current implementation includes all known holidays of year 2019 and
+    2020 as a lookup table and should therefore correctly determine
+    holidays in those 2 years. It should also determine most of the future
+    updates correct by some basic compuation, except for the ones generated
+    by the weekend-compensation rule.
 
-    Generally speaking queries for far future should be avoided.
+    Conventionally the holiday calendar for the next year is announcend at
+    the end of June and we could start to mix the new information into the
+    lookup table in this module.
+
+    Generally speaking, queries for far future should be avoided.
 
 EXPORTABLE FUNCTIONS
 
@@ -48,8 +50,8 @@ EXPORTABLE FUNCTIONS
 
         my $holiday_name = is_tw_holiday( $year, $month, $day );
 
-    This subroutine returns the name of the holiday for the given day -- if
-    it is a holiday. Otherwise it returns undef.
+    This subroutine returns the name of the holiday for the given day if it
+    is a holiday. Otherwise it returns undef.
 
  tw_holidays
 
@@ -83,12 +85,13 @@ METHODS
 
 SEE ALSO
 
-    Date::Holidays, https://www.dgpa.gov.tw/informationlist?uid=30 =head1
-    COPYRIGHT
+    Date::Holidays, https://www.dgpa.gov.tw/informationlist?uid=30
 
 AUTHOR
 
     Kang-min Liu <gugod@gugod.org>
+
+    Wei-Hon Chen
 
 LICENSE
 
