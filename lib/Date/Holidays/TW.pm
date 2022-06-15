@@ -2,7 +2,7 @@ package Date::Holidays::TW;
 use strict;
 use utf8;
 
-our $VERSION = v0.3.0;
+our $VERSION = v0.4.0;
 
 use Exporter 'import';
 our @EXPORT_OK = qw(is_tw_holiday tw_holidays);
