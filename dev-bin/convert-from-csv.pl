@@ -15,9 +15,7 @@ After converting that from Big5 to UTF-8, feed it to this program.
 
 =cut
 
-use v5.18;
-use strict;
-use warnings;
+use v5.36;
 use utf8;
 
 use Text::CSV;
