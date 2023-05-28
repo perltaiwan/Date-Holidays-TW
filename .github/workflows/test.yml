@@ -12,8 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run:
-        - apt update
-        - apt install libmpfr-dev
-        - cpanm --quiet --notest --installdeps .
+      - run: apt update
+      - run: apt install libmpfr-dev
+      - run: cpanm --quiet --notest --installdeps .
       - run: yath test --qvf t/
